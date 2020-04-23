@@ -1,3 +1,3 @@
-# coronavirus-referral-service
+# parking-enforcement-service
 
-A simple service for receiving coronovirus referral from the public and passing that information to CRM.
+A simple service for receiving parking enforcement request from the public and passing that information to CRM.
