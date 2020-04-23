@@ -49,7 +49,6 @@ namespace parking_enforcement_service
                 });
             });
 
-            services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
             services.AddAvailability();            
             services.AddTransient<EventCodeConfiguration>(_ => new EventCodeConfiguration(Convert.ToInt32(Configuration["ShieldedEventCode"]), Convert.ToInt32(Configuration["NonShieldedEventCode"])));
             services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
