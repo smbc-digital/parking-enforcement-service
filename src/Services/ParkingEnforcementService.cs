@@ -19,28 +19,34 @@ namespace parking_enforcement_service.Services
         }
 
         public async Task<string> CreateCase(ParkingEnforcementRequest parkingEnforcementRequest)
-        {       
-            var description = $@"FirstName: {parkingEnforcementRequest.FirstName}
-                                LastName: { parkingEnforcementRequest.LastName}
-                                Email: {parkingEnforcementRequest.Email}
-                                Phone: {parkingEnforcementRequest.Phone}
-                                MoreDetails {parkingEnforcementRequest.MoreDetails}
-                                FurtherInformation {parkingEnforcementRequest.FurtherInformation}";
+        {
+            var crmCase = CreateCrmCaseObject(parkingEnforcementRequest);
 
-            if (parkingEnforcementRequest.CustomersAddress != null)
+            try
             {
-                description += $@"AddressLine1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
-                                AddressLine2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
-                                Town: {parkingEnforcementRequest.CustomersAddress.Town}
-                                Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}
-                                SelectedAddress: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
-            }
+                var response = await _VerintServiceGateway.CreateCase(crmCase);
+                //_logger.LogError(JsonConvert.SerializeObject(response));
 
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new Exception("Status code not successful");
+                }
+
+                return response.ResponseContent;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"CRMService CreateCase an exception has occured while creating the case in verint service", ex);
+            }
+        }
+
+        private Case CreateCrmCaseObject(ParkingEnforcementRequest parkingEnforcementRequest)
+        {
             var crmCase = new Case
             {
                 EventCode = 4000031,
                 EventTitle = "Basic Verint Case",
-                Description = description,
+                Description = GenerateDescription(parkingEnforcementRequest),
                 Street = new Street
                 {
                     Reference = parkingEnforcementRequest.StreetAddress.PlaceRef
@@ -85,22 +91,27 @@ namespace parking_enforcement_service.Services
                 }
             }
 
-            try
-            {
-                var response = await _VerintServiceGateway.CreateCase(crmCase);
-                //_logger.LogError(JsonConvert.SerializeObject(response));
+            return crmCase;
+        }
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception("Status code not successful");
-                }
+        private string GenerateDescription(ParkingEnforcementRequest parkingEnforcementRequest)
+        {
+            var description = $@"FirstName: {parkingEnforcementRequest.FirstName}
+                                LastName: { parkingEnforcementRequest.LastName}
+                                Email: {parkingEnforcementRequest.Email}
+                                Phone: {parkingEnforcementRequest.Phone}
+                                MoreDetails {parkingEnforcementRequest.MoreDetails}
+                                FurtherInformation {parkingEnforcementRequest.FurtherInformation}";
 
-                return response.ResponseContent;
-            }
-            catch (Exception ex)
+            if (parkingEnforcementRequest.CustomersAddress != null)
             {
-                throw new Exception($"CRMService CreateCase an exception has occured while creating the case in verint service", ex);
+                description += $@"AddressLine1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
+                                AddressLine2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
+                                Town: {parkingEnforcementRequest.CustomersAddress.Town}
+                                Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}
+                                SelectedAddress: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
             }
+            return description;
         }
     }
 }

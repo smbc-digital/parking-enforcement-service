@@ -1,4 +1,5 @@
-﻿
+﻿using StockportGovUK.NetStandard.Models.Addresses;
+
 namespace parking_enforcement_service.Models
 {
     public class ParkingEnforcementRequest
@@ -9,7 +10,7 @@ namespace parking_enforcement_service.Models
         public string Phone { get; set; }
         public string MoreDetails { get; set; }
         public string FurtherInformation { get; set; }
-        public StockportGovUK.NetStandard.Models.Addresses.Address StreetAddress { get; set; }
-        public StockportGovUK.NetStandard.Models.Addresses.Address CustomersAddress { get; set; }
+        public Address StreetAddress { get; set; }
+        public Address CustomersAddress { get; set; }
     }
 }
