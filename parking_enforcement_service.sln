@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29911.84
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "parking_enforcement_service", "src\parking_enforcement_service.csproj", "{F17C3DF9-864F-4D72-82F3-08AB1C0DC7E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "parking_enforcement_service_tests", "parking_enforcement_service_tests\parking_enforcement_service_tests.csproj", "{DCBA649A-1563-4C61-899D-F286CE6E6C6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{F17C3DF9-864F-4D72-82F3-08AB1C0DC7E9}.Release|x64.Build.0 = Release|Any CPU
 		{F17C3DF9-864F-4D72-82F3-08AB1C0DC7E9}.Release|x86.ActiveCfg = Release|Any CPU
 		{F17C3DF9-864F-4D72-82F3-08AB1C0DC7E9}.Release|x86.Build.0 = Release|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Debug|x64.Build.0 = Debug|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Debug|x86.Build.0 = Debug|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Release|x64.ActiveCfg = Release|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Release|x64.Build.0 = Release|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Release|x86.ActiveCfg = Release|Any CPU
+		{DCBA649A-1563-4C61-899D-F286CE6E6C6C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
