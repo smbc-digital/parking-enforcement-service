@@ -1,69 +1,47 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using parking_enforcement_service.Controllers;
 using parking_enforcement_service.Models;
 using parking_enforcement_service.Services;
 using StockportGovUK.NetStandard.Models.Addresses;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace parking_enforcement_service_tests.Controllers
 {
     public class HomeControllerTest
     {
-        private readonly HomeController _controller;
-        private readonly Mock<ILogger<HomeController>> _mockLogger = new Mock<ILogger<HomeController>>();
-        private readonly Mock<IParkingEnforcementService> _mockCrmService = new Mock<IParkingEnforcementService>();
+        private readonly HomeController _homeController;
+        private readonly Mock<IParkingEnforcementService> _mockParkingEnforcementService = new Mock<IParkingEnforcementService>();
 
         public HomeControllerTest()
         {
-            _controller = new HomeController(_mockLogger.Object, _mockCrmService.Object);
+            _homeController = new HomeController(Mock.Of<ILogger<HomeController>>(), _mockParkingEnforcementService.Object);
         }
+
         [Fact]
-        public async void PostCrmCase_ShouldCallParkingEnforcementService()
+        public async Task Post_ShouldCallCreateCase()
         {
-            //Arrange
-            _mockCrmService
+            _mockParkingEnforcementService
                 .Setup(_ => _.CreateCase(It.IsAny<ParkingEnforcementRequest>()))
-                .ReturnsAsync(It.IsAny<string>());
+                .ReturnsAsync("test");
 
-            var Data = new ParkingEnforcementRequest
-            {
-                FirstName = "Joe",
-                LastName = "Bloggs",
-                Email = "joe@test.com",
-                Phone = "0161 123 1234",
-                MoreDetails = "details",
-                FurtherInformation = "further info",
+            var result = await _homeController.Post(null);
 
-                StreetAddress = new Address
-                {
-                    SelectedAddress = "Test",
-                    AddressLine1 = "100 Green road",
-                    AddressLine2 = "",
-                    Town = "Stockport",
-                    Postcode = "SK2 9FT",
-                    PlaceRef = "",
-                },
+            _mockParkingEnforcementService
+                .Verify(_ => _.CreateCase(null), Times.Once);
+        }
 
-                CustomersAddress = new Address
-                {
-                    SelectedAddress = "Test",
-                    AddressLine1 = "100 Green road",
-                    AddressLine2 = "",
-                    Town = "Stockport",
-                    Postcode = "SK2 9FT",
-                    PlaceRef = "",
-                }
-            };
+        [Fact]
+        public async Task Post_ReturnOkActionResult()
+        {
+            _mockParkingEnforcementService
+                .Setup(_ => _.CreateCase(It.IsAny<ParkingEnforcementRequest>()))
+                .ReturnsAsync("test");
 
-            // Act
-            await _controller.Post(Data);
+            var result = await _homeController.Post(null);
 
-            // Assert
-            _mockCrmService.Verify(_ => _.CreateCase(It.IsAny<ParkingEnforcementRequest>()), Times.Once);
+            Assert.Equal("OkObjectResult", result.GetType().Name);
         }
     }
 }

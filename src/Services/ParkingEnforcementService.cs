@@ -1,7 +1,7 @@
-﻿using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
-using StockportGovUK.NetStandard.Models.Verint;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
+using StockportGovUK.NetStandard.Models.Verint;
 using parking_enforcement_service.Models;
 
 namespace parking_enforcement_service.Services
@@ -36,7 +36,7 @@ namespace parking_enforcement_service.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"CRMService CreateCase an exception has occured while creating the case in verint service", ex);
+                throw new Exception($"CRMService CreateParkingEnforcementService an exception has occured while creating the case in verint service", ex);
             }
         }
 

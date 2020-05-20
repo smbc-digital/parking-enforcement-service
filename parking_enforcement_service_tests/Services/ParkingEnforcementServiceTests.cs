@@ -26,7 +26,7 @@ namespace parking_enforcement_service_tests.Services
             FurtherInformation = "test info",
             StreetAddress = new StockportGovUK.NetStandard.Models.Addresses.Address
             {
-                AddressLine1 = "100 Red road",
+                AddressLine1 = "100 Green road",
                 AddressLine2 = "",
                 Postcode = "SK2 9FT",
             },
@@ -38,10 +38,10 @@ namespace parking_enforcement_service_tests.Services
             }
         };
 
-        //public ParkingEnforcementServiceTests()
-        //{
-        //    _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object);
-        //}
+        public ParkingEnforcementServiceTests()
+        {
+            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, null);
+        }
 
         [Fact]
         public async Task CreateCase_ShouldReThrowCreateCaseException_CaughtFromVerintGateway()
@@ -51,7 +51,7 @@ namespace parking_enforcement_service_tests.Services
                 .Throws(new Exception("TestException"));
 
             var result = await Assert.ThrowsAsync<Exception>(() => _service.CreateCase(_parkingEnforcementRequestData));
-            Assert.Contains($"CRMService CreateParkingEnforcementRequest: an exception has occured while creating the case in verint service", result.Message);
+            Assert.Contains($"CRMService CreateParkingEnforcementService an exception has occured while creating the case in verint service", result.Message);
         }
 
         [Fact]
@@ -103,10 +103,10 @@ namespace parking_enforcement_service_tests.Services
             _mockVerintServiceGateway.Verify(_ => _.CreateCase(It.IsAny<Case>()), Times.Once);
 
             Assert.NotNull(crmCaseParameter);
-            //Assert.Equal(_parkingEnforcementRequestData.StreetAddress.AddressLine1, crmCaseParameter.Customer.Address.AddressLine1);
-            //Assert.Equal(_parkingEnforcementRequestData.StreetAddress.AddressLine2, crmCaseParameter.Customer.Address.AddressLine2);
-            //Assert.Equal(_parkingEnforcementRequestData.StreetAddress.Town, crmCaseParameter.Customer.Address.AddressLine3);
-            //Assert.Equal(_parkingEnforcementRequestData.StreetAddress.Postcode, crmCaseParameter.Customer.Address.Postcode);
+            Assert.Equal(_parkingEnforcementRequestData.StreetAddress.AddressLine1, crmCaseParameter.Customer.Address.AddressLine1);
+            Assert.Equal(_parkingEnforcementRequestData.StreetAddress.AddressLine2, crmCaseParameter.Customer.Address.AddressLine2);
+            Assert.Equal(_parkingEnforcementRequestData.StreetAddress.Town, crmCaseParameter.Customer.Address.AddressLine3);
+            Assert.Equal(_parkingEnforcementRequestData.StreetAddress.Postcode, crmCaseParameter.Customer.Address.Postcode);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.AddressLine1, crmCaseParameter.Customer.Address.AddressLine1);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.AddressLine2, crmCaseParameter.Customer.Address.AddressLine2);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.Town, crmCaseParameter.Customer.Address.AddressLine3);
