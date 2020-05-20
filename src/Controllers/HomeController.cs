@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using parking_enforcement_service.Models;
 using parking_enforcement_service.Services;
 using StockportGovUK.AspNetCore.Attributes.TokenAuthentication;
-using System.Threading.Tasks;
 
 namespace parking_enforcement_service.Controllers
 {
