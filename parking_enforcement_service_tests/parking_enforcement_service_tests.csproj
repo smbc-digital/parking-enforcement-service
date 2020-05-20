@@ -19,4 +19,7 @@
     <ProjectReference Include="..\src\parking_enforcement_service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>
