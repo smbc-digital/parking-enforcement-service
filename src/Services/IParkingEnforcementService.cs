@@ -1,5 +1,5 @@
-﻿using parking_enforcement_service.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using parking_enforcement_service.Models;
 
 namespace parking_enforcement_service.Services
 {

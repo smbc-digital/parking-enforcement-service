@@ -1,12 +1,9 @@
-﻿using parking_enforcement_service.Models;
-using parking_enforcement_service.Services;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using parking_enforcement_service.Models;
+using parking_enforcement_service.Services;
 using StockportGovUK.AspNetCore.Attributes.TokenAuthentication;
-using System;
-using System.Threading.Tasks;
-
 
 namespace parking_enforcement_service.Controllers
 {
@@ -28,19 +25,9 @@ namespace parking_enforcement_service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]ParkingEnforcementRequest parkingEnforcementRequest)
         {
-            _logger.LogDebug(JsonConvert.SerializeObject(parkingEnforcementRequest));
+            string result = await _parkingEnforcementService.CreateCase(parkingEnforcementRequest);
 
-            try
-            {
-                var result = await _parkingEnforcementService.CreateCase(parkingEnforcementRequest);
-                _logger.LogWarning($"Case result: { result }");
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning($"Case an exception has occurred while calling CreateCase, ex: {ex}");
-                return StatusCode(500, ex);
-            }
+            return Ok(result);
         }
     }
 }

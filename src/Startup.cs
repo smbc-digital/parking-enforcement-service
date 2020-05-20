@@ -1,18 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using parking_enforcement_service.Models;
+using parking_enforcement_service.Services;
+using parking_enforcement_service.Utils.HealthChecks;
 using StockportGovUK.AspNetCore.Availability;
 using StockportGovUK.AspNetCore.Middleware;
 using StockportGovUK.NetStandard.Gateways;
 using Swashbuckle.AspNetCore.Swagger;
-using parking_enforcement_service.Services;
-using parking_enforcement_service.Utils.HealthChecks;
-using parking_enforcement_service.Models;
-using System;
 
 namespace parking_enforcement_service
 {
@@ -49,7 +49,7 @@ namespace parking_enforcement_service
                 });
             });
 
-            services.AddAvailability();            
+            services.AddAvailability();
             services.AddTransient<EventCodeConfiguration>(_ => new EventCodeConfiguration(Convert.ToInt32(Configuration["ShieldedEventCode"]), Convert.ToInt32(Configuration["NonShieldedEventCode"])));
             services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
             services.AddTransient<IParkingEnforcementService, ParkingEnforcementService>();
@@ -66,13 +66,13 @@ namespace parking_enforcement_service
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
-            
+
             app.UseMiddleware<ExceptionHandling>();
             app.UseHealthChecks("/healthcheck", HealthCheckConfig.Options);
             app.UseMvc();
             app.UseSwagger();
 
-            var swaggerPrefix = (env.EnvironmentName == "local" ||  env.EnvironmentName == "Development") ? string.Empty : "/parkingenforcementservice";
+            string swaggerPrefix = (env.EnvironmentName == "local" || env.EnvironmentName == "Development") ? string.Empty : "/parkingenforcementservice";
 
             app.UseSwaggerUI(c =>
             {
