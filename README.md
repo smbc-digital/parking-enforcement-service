@@ -1,7 +1,7 @@
 <h1 align="center">Parking Enforcement Service</h1>
 
 <div align="center">
-  :tractor: :no_entry: :japanese-goblin:
+  :tractor: :no_entry: :eyes:
 </div>
 <div align="center">
   My father will hear about this!
