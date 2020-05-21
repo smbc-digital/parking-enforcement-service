@@ -76,7 +76,7 @@ namespace parking_enforcement_service
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"{swaggerPrefix}/swagger/v1/swagger.json", "parking_enforcement_service API");
+                c.SwaggerEndpoint("v1/swagger.json", "Parking Enforcement Service API");
             });
         }
     }
