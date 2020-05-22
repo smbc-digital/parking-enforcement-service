@@ -72,8 +72,6 @@ namespace parking_enforcement_service
             app.UseMvc();
             app.UseSwagger();
 
-            string swaggerPrefix = (env.EnvironmentName == "local" || env.EnvironmentName == "Development") ? string.Empty : "/parkingenforcementservice";
-
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Parking Enforcement Service API");
