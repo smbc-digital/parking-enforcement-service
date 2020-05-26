@@ -43,7 +43,7 @@ namespace parking_enforcement_service_tests.Services
 
         public ParkingEnforcementServiceTests()
         {
-            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, null, config);
+            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, config);
         }
 
         [Fact]

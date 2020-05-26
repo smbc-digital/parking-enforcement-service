@@ -10,13 +10,11 @@ namespace parking_enforcement_service.Services
     public class ParkingEnforcementService : IParkingEnforcementService
     {
         private readonly IVerintServiceGateway _VerintServiceGateway;
-        private readonly EventCodeConfiguration _EventCodeConfiguration;
         private readonly IConfiguration configuration;
 
-        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, EventCodeConfiguration eventCodeConfiguration, IConfiguration iConfig)
+        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, IConfiguration iConfig)
         {
             _VerintServiceGateway = verintServiceGateway;
-            _EventCodeConfiguration = eventCodeConfiguration;
             configuration = iConfig;
         }
 
