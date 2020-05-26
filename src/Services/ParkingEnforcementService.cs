@@ -43,9 +43,10 @@ namespace parking_enforcement_service.Services
         {
             var crmCase = new Case
             {
-                EventCode = Int32.Parse(configuration.GetSection("crmCaseSettings").GetSection("EventCode").Value),
-                EventTitle = configuration.GetSection("crmCaseSettings").GetSection("EventTitle").Value,
+                EventCode = Int32.Parse(configuration.GetSection("CrmCaseSettings").GetSection("EventCode").Value),
+                EventTitle = configuration.GetSection("CrmCaseSettings").GetSection("EventTitle").Value,
                 Description = GenerateDescription(parkingEnforcementRequest),
+                Classification = configuration.GetSection("CrmCaseSettings").GetSection("Classification").Value,
                 Street = new Street
                 {
                     Reference = parkingEnforcementRequest.StreetAddress.PlaceRef
@@ -104,7 +105,8 @@ namespace parking_enforcement_service.Services
 
             if (parkingEnforcementRequest.CustomersAddress != null)
             {
-                description += $@"\n Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
+                description += $@"
+                                Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
                                 Address Line 2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
                                 Town: {parkingEnforcementRequest.CustomersAddress.Town}
                                 Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}

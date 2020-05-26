@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using StockportGovUK.AspNetCore.Logging.Elasticsearch.Aws;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace parking_enforcement_service
 {
@@ -28,14 +28,17 @@ namespace parking_enforcement_service
                 .WriteToElasticsearchAws(Configuration)
                 .CreateLogger();
 
-            BuildWebHost(args).Run();
+            BuildHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseConfiguration(Configuration)
-                .UseSerilog()
-                .Build();
+        public static IHost BuildHost(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+                webBuilder.UseConfiguration(Configuration);
+            })
+            .UseSerilog()
+            .Build();
     }
 }
