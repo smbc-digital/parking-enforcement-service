@@ -3,19 +3,21 @@ using System.Threading.Tasks;
 using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
 using StockportGovUK.NetStandard.Models.Verint;
 using parking_enforcement_service.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace parking_enforcement_service.Services
 {
     public class ParkingEnforcementService : IParkingEnforcementService
     {
         private readonly IVerintServiceGateway _VerintServiceGateway;
-
         private readonly EventCodeConfiguration _EventCodeConfiguration;
+        private readonly IConfiguration configuration;
 
-        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, EventCodeConfiguration eventCodeConfiguration)
+        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, EventCodeConfiguration eventCodeConfiguration, IConfiguration iConfig)
         {
             _VerintServiceGateway = verintServiceGateway;
             _EventCodeConfiguration = eventCodeConfiguration;
+            configuration = iConfig;
         }
 
         public async Task<string> CreateCase(ParkingEnforcementRequest parkingEnforcementRequest)
@@ -43,8 +45,8 @@ namespace parking_enforcement_service.Services
         {
             var crmCase = new Case
             {
-                EventCode = 4000031,
-                EventTitle = "Basic Verint Case",
+                EventCode = Int32.Parse(configuration.GetSection("crmCaseSettings").GetSection("EventCode").Value),
+                EventTitle = configuration.GetSection("crmCaseSettings").GetSection("EventTitle").Value,
                 Description = GenerateDescription(parkingEnforcementRequest),
                 Street = new Street
                 {
@@ -95,20 +97,20 @@ namespace parking_enforcement_service.Services
 
         private string GenerateDescription(ParkingEnforcementRequest parkingEnforcementRequest)
         {
-            var description = $@"FirstName: {parkingEnforcementRequest.FirstName}
-                                LastName: { parkingEnforcementRequest.LastName}
+            var description = $@"First Name: {parkingEnforcementRequest.FirstName}
+                                Last Name: { parkingEnforcementRequest.LastName}
                                 Email: {parkingEnforcementRequest.Email}
                                 Phone: {parkingEnforcementRequest.Phone}
-                                MoreDetails {parkingEnforcementRequest.MoreDetails}
-                                FurtherInformation {parkingEnforcementRequest.FurtherInformation}";
+                                More Details {parkingEnforcementRequest.MoreDetails}
+                                Further Information {parkingEnforcementRequest.FurtherInformation}";
 
             if (parkingEnforcementRequest.CustomersAddress != null)
             {
-                description += $@"AddressLine1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
-                                AddressLine2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
+                description += $@"\n Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
+                                Address Line 2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
                                 Town: {parkingEnforcementRequest.CustomersAddress.Town}
                                 Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}
-                                SelectedAddress: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
+                                Selected Address: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
             }
             return description;
         }
