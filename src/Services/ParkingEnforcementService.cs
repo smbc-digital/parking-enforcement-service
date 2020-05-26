@@ -43,8 +43,8 @@ namespace parking_enforcement_service.Services
         {
             var crmCase = new Case
             {
-                EventCode = 4000031,
-                EventTitle = "Basic Verint Case",
+                EventCode = 2002797,
+                EventTitle = "Traffic services > Parking > Parking enforcement",
                 Description = GenerateDescription(parkingEnforcementRequest),
                 Street = new Street
                 {
@@ -95,20 +95,20 @@ namespace parking_enforcement_service.Services
 
         private string GenerateDescription(ParkingEnforcementRequest parkingEnforcementRequest)
         {
-            var description = $@"FirstName: {parkingEnforcementRequest.FirstName}
-                                LastName: { parkingEnforcementRequest.LastName}
+            var description = $@"First Name: {parkingEnforcementRequest.FirstName}
+                                Last Name: { parkingEnforcementRequest.LastName}
                                 Email: {parkingEnforcementRequest.Email}
                                 Phone: {parkingEnforcementRequest.Phone}
-                                MoreDetails {parkingEnforcementRequest.MoreDetails}
-                                FurtherInformation {parkingEnforcementRequest.FurtherInformation}";
+                                More Details {parkingEnforcementRequest.MoreDetails}
+                                Further Information {parkingEnforcementRequest.FurtherInformation}";
 
             if (parkingEnforcementRequest.CustomersAddress != null)
             {
-                description += $@"AddressLine1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
-                                AddressLine2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
+                description += $@"\n Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
+                                Address Line 2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
                                 Town: {parkingEnforcementRequest.CustomersAddress.Town}
                                 Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}
-                                SelectedAddress: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
+                                Selected Address: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
             }
             return description;
         }
