@@ -3,19 +3,21 @@ using System.Threading.Tasks;
 using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
 using StockportGovUK.NetStandard.Models.Verint;
 using parking_enforcement_service.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace parking_enforcement_service.Services
 {
     public class ParkingEnforcementService : IParkingEnforcementService
     {
         private readonly IVerintServiceGateway _VerintServiceGateway;
-
         private readonly EventCodeConfiguration _EventCodeConfiguration;
+        private readonly IConfiguration configuration;
 
-        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, EventCodeConfiguration eventCodeConfiguration)
+        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, EventCodeConfiguration eventCodeConfiguration, IConfiguration iConfig)
         {
             _VerintServiceGateway = verintServiceGateway;
             _EventCodeConfiguration = eventCodeConfiguration;
+            configuration = iConfig;
         }
 
         public async Task<string> CreateCase(ParkingEnforcementRequest parkingEnforcementRequest)
@@ -43,8 +45,8 @@ namespace parking_enforcement_service.Services
         {
             var crmCase = new Case
             {
-                EventCode = 2002797,
-                EventTitle = "Traffic services > Parking > Parking enforcement",
+                EventCode = Int32.Parse(configuration.GetSection("crmCaseSettings").GetSection("EventCode").Value),
+                EventTitle = configuration.GetSection("crmCaseSettings").GetSection("EventTitle").Value,
                 Description = GenerateDescription(parkingEnforcementRequest),
                 Street = new Street
                 {

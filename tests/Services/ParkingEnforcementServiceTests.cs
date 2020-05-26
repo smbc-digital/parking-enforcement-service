@@ -8,6 +8,7 @@ using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
 using StockportGovUK.NetStandard.Gateways.Response;
 using StockportGovUK.NetStandard.Models.Verint;
 using Xunit;
+using Microsoft.Extensions.Configuration;
 
 namespace parking_enforcement_service_tests.Services
 {
@@ -37,10 +38,12 @@ namespace parking_enforcement_service_tests.Services
                 Postcode = "SK2 9FT",
             }
         };
+        IConfiguration config = InitConfiguration();
+
 
         public ParkingEnforcementServiceTests()
         {
-            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, null);
+            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, null, config);
         }
 
         [Fact]
@@ -140,6 +143,14 @@ namespace parking_enforcement_service_tests.Services
 
             Assert.Contains(moreDetails, crmCaseParameter.Description);
             Assert.Contains(furtherInformation, crmCaseParameter.Description);            
+        }
+
+        public static IConfiguration InitConfiguration()
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.test.json")
+                .Build();
+            return config;
         }
     }
 }
