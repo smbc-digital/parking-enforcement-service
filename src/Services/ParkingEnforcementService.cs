@@ -4,6 +4,8 @@ using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
 using StockportGovUK.NetStandard.Models.Verint;
 using parking_enforcement_service.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace parking_enforcement_service.Services
 {
@@ -11,11 +13,15 @@ namespace parking_enforcement_service.Services
     {
         private readonly IVerintServiceGateway _VerintServiceGateway;
         private readonly IConfiguration configuration;
+        private readonly ILogger<ParkingEnforcementService> _logger;
 
-        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, IConfiguration iConfig)
+        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway
+                                        , IConfiguration iConfig
+                                        , ILogger<ParkingEnforcementService> logger)
         {
             _VerintServiceGateway = verintServiceGateway;
             configuration = iConfig;
+            _logger = logger;
         }
 
         public async Task<string> CreateCase(ParkingEnforcementRequest parkingEnforcementRequest)
@@ -91,6 +97,7 @@ namespace parking_enforcement_service.Services
                 }
             }
 
+            _logger.LogInformation(JsonConvert.SerializeObject(crmCase));
             return crmCase;
         }
 
