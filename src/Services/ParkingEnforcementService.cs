@@ -4,6 +4,8 @@ using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
 using StockportGovUK.NetStandard.Models.Verint;
 using parking_enforcement_service.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace parking_enforcement_service.Services
 {
@@ -11,11 +13,15 @@ namespace parking_enforcement_service.Services
     {
         private readonly IVerintServiceGateway _VerintServiceGateway;
         private readonly IConfiguration configuration;
+        private readonly ILogger<ParkingEnforcementService> _logger;
 
-        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway, IConfiguration iConfig)
+        public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway
+                                        , IConfiguration iConfig
+                                        , ILogger<ParkingEnforcementService> logger)
         {
             _VerintServiceGateway = verintServiceGateway;
             configuration = iConfig;
+            _logger = logger;
         }
 
         public async Task<string> CreateCase(ParkingEnforcementRequest parkingEnforcementRequest)
@@ -43,9 +49,10 @@ namespace parking_enforcement_service.Services
         {
             var crmCase = new Case
             {
-                EventCode = Int32.Parse(configuration.GetSection("crmCaseSettings").GetSection("EventCode").Value),
-                EventTitle = configuration.GetSection("crmCaseSettings").GetSection("EventTitle").Value,
+                EventCode = Int32.Parse(configuration.GetSection("CrmCaseSettings").GetSection("EventCode").Value),
+                EventTitle = configuration.GetSection("CrmCaseSettings").GetSection("EventTitle").Value,
                 Description = GenerateDescription(parkingEnforcementRequest),
+                Classification = configuration.GetSection("CrmCaseSettings").GetSection("Classification").Value,
                 Street = new Street
                 {
                     Reference = parkingEnforcementRequest.StreetAddress.PlaceRef
@@ -90,6 +97,7 @@ namespace parking_enforcement_service.Services
                 }
             }
 
+            _logger.LogInformation(JsonConvert.SerializeObject(crmCase));
             return crmCase;
         }
 
@@ -104,7 +112,8 @@ namespace parking_enforcement_service.Services
 
             if (parkingEnforcementRequest.CustomersAddress != null)
             {
-                description += $@"\n Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
+                description += $@"
+                                Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
                                 Address Line 2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
                                 Town: {parkingEnforcementRequest.CustomersAddress.Town}
                                 Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}

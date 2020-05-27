@@ -9,6 +9,7 @@ using StockportGovUK.NetStandard.Gateways.Response;
 using StockportGovUK.NetStandard.Models.Verint;
 using Xunit;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace parking_enforcement_service_tests.Services
 {
@@ -16,6 +17,7 @@ namespace parking_enforcement_service_tests.Services
     {
         private Mock<IVerintServiceGateway> _mockVerintServiceGateway = new Mock<IVerintServiceGateway>();
         private ParkingEnforcementService _service;
+        private Mock<ILogger<ParkingEnforcementService>> _mocklogger = new Mock<ILogger<ParkingEnforcementService>>();
 
         ParkingEnforcementRequest _parkingEnforcementRequestData = new ParkingEnforcementRequest
         {
@@ -43,7 +45,7 @@ namespace parking_enforcement_service_tests.Services
 
         public ParkingEnforcementServiceTests()
         {
-            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, config);
+            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, config, _mocklogger.Object);
         }
 
         [Fact]

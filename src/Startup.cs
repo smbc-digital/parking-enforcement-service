@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using parking_enforcement_service.Models;
-using parking_enforcement_service.Services;
+using Microsoft.Extensions.Hosting;
 using parking_enforcement_service.Utils.HealthChecks;
+using parking_enforcement_service.Utils.ServiceCollectionExtensions;
 using StockportGovUK.AspNetCore.Availability;
 using StockportGovUK.AspNetCore.Middleware;
 using StockportGovUK.NetStandard.Gateways;
-using Swashbuckle.AspNetCore.Swagger;
+using System.Diagnostics.CodeAnalysis;
 
 namespace parking_enforcement_service
 {
@@ -28,49 +24,36 @@ namespace parking_enforcement_service
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddMvc().AddMvcOptions(_ => _.AllowEmptyInputInBodyModelBinding = true);
-
+            services.AddMvc().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
+            services.RegisterServices();
+            services.AddAvailability();
+            services.AddSwagger();
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("TestHealthCheck");
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "parking_enforcement_service API", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-                {
-                    Description = "Authorization using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
-                });
-                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-                {
-                    {"Bearer", new string[] { }},
-                });
-            });
 
-            services.AddAvailability();            
-            services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
-            services.AddTransient<IParkingEnforcementService, ParkingEnforcementService>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsEnvironment("local"))
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseHsts();
-                app.UseHttpsRedirection();
+
             }
+            app.UseHttpsRedirection();
+            app.UseRouting();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
 
-            app.UseMiddleware<ExceptionHandling>();
+            app.UseMiddleware<ApiExceptionHandling>();
             app.UseHealthChecks("/healthcheck", HealthCheckConfig.Options);
-            app.UseMvc();
+           
             app.UseSwagger();
-
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("v1/swagger.json", "Parking Enforcement Service API");

@@ -1,43 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModelV2>InProcess</AspNetCoreHostingModelV2>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>parking_enforcement_service</RootNamespace>
-    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
-    <RuntimeFrameworkVersion>2.2.6</RuntimeFrameworkVersion>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="2.2.3" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="2.2.5" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
-    <!-- <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="2.2.0" />
-    <PackageReference Include="Polly" Version="7.2.0" /> -->
-    <PackageReference Include="Serilog" Version="2.8.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.4" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="StockportGovUK.AspNetCore.Attributes.TokenAuthentication" Version="0.*" />
-    <PackageReference Include="StockportGovUK.AspNetCore.Availability" Version="0.*" />
-    <PackageReference Include="StockportGovUK.AspNetCore.Logging.Elasticsearch.Aws" Version="0.*" />
-    <PackageReference Include="StockportGovUK.AspNetCore.Middleware.ExceptionHandling" Version="0.*" />
-    <PackageReference Include="StockportGovUK.NetStandard.Gateways" Version="1.*" />
-    <PackageReference Include="StockportGovUK.NetStandard.Models" Version="0.14.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.*" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="StockportGovUK.AspNetCore.Attributes.TokenAuthentication" Version="1.0.0" />
+    <PackageReference Include="StockportGovUK.AspNetCore.Availability" Version="1.1.0" />
+    <PackageReference Include="StockportGovUK.AspNetCore.Logging.Elasticsearch.Aws" Version="1.0.0" />
+    <PackageReference Include="StockportGovUK.AspNetCore.Middleware.ExceptionHandling" Version="2.0.0" />
+    <PackageReference Include="StockportGovUK.NetStandard.Gateways" Version="3.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <PackageLicenseFile>License.txt</PackageLicenseFile>
-  </PropertyGroup>
-
-<!-- <ItemGroup>
-  <Reference Include="MyAssembly">
-    <HintPath>C:\Code\Microservices\Libraries\StockportGovUK.NetStandard.Gateways\bin\Debug\netstandard2.0\StockportGovUK.NetStandard.Gateways.dll</HintPath>
-  </Reference>
-</ItemGroup> -->
 
   <ItemGroup>
     <None Include="License.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
