@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using parking_enforcement_service.Models;
@@ -10,6 +9,7 @@ using StockportGovUK.NetStandard.Models.Verint;
 using Xunit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using parking_enforcement_service.Helpers;
 
 namespace parking_enforcement_service_tests.Services
 {
@@ -18,6 +18,7 @@ namespace parking_enforcement_service_tests.Services
         private Mock<IVerintServiceGateway> _mockVerintServiceGateway = new Mock<IVerintServiceGateway>();
         private ParkingEnforcementService _service;
         private Mock<ILogger<ParkingEnforcementService>> _mocklogger = new Mock<ILogger<ParkingEnforcementService>>();
+        private Mock<IMailHelper> _mockMailHelper = new Mock<IMailHelper>();
 
         ParkingEnforcementRequest _parkingEnforcementRequestData = new ParkingEnforcementRequest
         {
@@ -45,7 +46,7 @@ namespace parking_enforcement_service_tests.Services
 
         public ParkingEnforcementServiceTests()
         {
-            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, config, _mocklogger.Object);
+            _service = new ParkingEnforcementService(_mockVerintServiceGateway.Object, config, _mocklogger.Object, _mockMailHelper.Object);
         }
 
         [Fact]
@@ -116,35 +117,9 @@ namespace parking_enforcement_service_tests.Services
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.AddressLine2, crmCaseParameter.Customer.Address.AddressLine2);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.Town, crmCaseParameter.Customer.Address.AddressLine3);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.Postcode, crmCaseParameter.Customer.Address.Postcode);
+            Assert.Equal(_parkingEnforcementRequestData.FurtherInformation, crmCaseParameter.Description);
             Assert.Null(crmCaseParameter.Customer.Address.UPRN);
             Assert.Null(crmCaseParameter.Customer.Address.Reference);
-        }
-
-        [Fact]
-        public async Task GenerateDescription_ShouldCallVerintGatewayAndGenerateDescription()
-        {
-            var moreDetails = _parkingEnforcementRequestData.MoreDetails;
-            var furtherInformation = _parkingEnforcementRequestData.FurtherInformation;
-
-            Case crmCaseParameter = null;
-
-            _mockVerintServiceGateway
-                .Setup(_ => _.CreateCase(It.IsAny<Case>()))
-                .Callback<Case>(_ => crmCaseParameter = _)
-                .ReturnsAsync(new HttpResponse<string>
-                {
-                    IsSuccessStatusCode = true,
-                    ResponseContent = "test"
-                });
-
-            _ = await _service.CreateCase(_parkingEnforcementRequestData);
-
-            _mockVerintServiceGateway.Verify(_ => _.CreateCase(It.IsAny<Case>()), Times.Once);
-
-            Assert.NotNull(crmCaseParameter);
-
-            Assert.Contains(moreDetails, crmCaseParameter.Description);
-            Assert.Contains(furtherInformation, crmCaseParameter.Description);            
         }
 
         public static IConfiguration InitConfiguration()

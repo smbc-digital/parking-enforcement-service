@@ -12,5 +12,6 @@ namespace parking_enforcement_service.Models
         public string FurtherInformation { get; set; }
         public Address StreetAddress { get; set; }
         public Address CustomersAddress { get; set; }
+        public Person Reporter { get; set; }
     }
 }

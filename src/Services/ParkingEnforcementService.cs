@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
-using StockportGovUK.NetStandard.Models.Verint;
-using parking_enforcement_service.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using parking_enforcement_service.Helpers;
+using parking_enforcement_service.Models;
+using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
+using StockportGovUK.NetStandard.Models.Enums;
+using StockportGovUK.NetStandard.Models.Verint;
 
 namespace parking_enforcement_service.Services
 {
@@ -14,14 +16,17 @@ namespace parking_enforcement_service.Services
         private readonly IVerintServiceGateway _VerintServiceGateway;
         private readonly IConfiguration configuration;
         private readonly ILogger<ParkingEnforcementService> _logger;
+        private readonly IMailHelper _mailHelper;
 
         public ParkingEnforcementService(IVerintServiceGateway verintServiceGateway
                                         , IConfiguration iConfig
-                                        , ILogger<ParkingEnforcementService> logger)
+                                        , ILogger<ParkingEnforcementService> logger
+                                        , IMailHelper mailHelper)
         {
             _VerintServiceGateway = verintServiceGateway;
             configuration = iConfig;
             _logger = logger;
+            _mailHelper = mailHelper;
         }
 
         public async Task<string> CreateCase(ParkingEnforcementRequest parkingEnforcementRequest)
@@ -37,6 +42,7 @@ namespace parking_enforcement_service.Services
                     throw new Exception("Status code not successful");
                 }
 
+                _mailHelper.SendEmail(parkingEnforcementRequest.Reporter, EMailTemplate.ParkingEnforcementRequest, response.ResponseContent);
                 return response.ResponseContent;
             }
             catch (Exception ex)
@@ -51,7 +57,7 @@ namespace parking_enforcement_service.Services
             {
                 EventCode = Int32.Parse(configuration.GetSection("CrmCaseSettings").GetSection("EventCode").Value),
                 EventTitle = configuration.GetSection("CrmCaseSettings").GetSection("EventTitle").Value,
-                Description = GenerateDescription(parkingEnforcementRequest),
+                Description = parkingEnforcementRequest.FurtherInformation,
                 Classification = configuration.GetSection("CrmCaseSettings").GetSection("Classification").Value,
                 Street = new Street
                 {
@@ -99,27 +105,6 @@ namespace parking_enforcement_service.Services
 
             _logger.LogInformation(JsonConvert.SerializeObject(crmCase));
             return crmCase;
-        }
-
-        private string GenerateDescription(ParkingEnforcementRequest parkingEnforcementRequest)
-        {
-            var description = $@"First Name: {parkingEnforcementRequest.FirstName}
-                                Last Name: { parkingEnforcementRequest.LastName}
-                                Email: {parkingEnforcementRequest.Email}
-                                Phone: {parkingEnforcementRequest.Phone}
-                                More Details {parkingEnforcementRequest.MoreDetails}
-                                Further Information {parkingEnforcementRequest.FurtherInformation}";
-
-            if (parkingEnforcementRequest.CustomersAddress != null)
-            {
-                description += $@"
-                                Address Line 1: {parkingEnforcementRequest.CustomersAddress.AddressLine1}
-                                Address Line 2: {parkingEnforcementRequest.CustomersAddress.AddressLine2}
-                                Town: {parkingEnforcementRequest.CustomersAddress.Town}
-                                Postcode; {parkingEnforcementRequest.CustomersAddress.Postcode}
-                                Selected Address: {parkingEnforcementRequest.CustomersAddress.SelectedAddress}";
-            }
-            return description;
         }
     }
 }
