@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
-using StockportGovUK.NetStandard.Models.Verint;
-using parking_enforcement_service.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using StockportGovUK.NetStandard.Models.Enums;
 using parking_enforcement_service.Helpers;
+using parking_enforcement_service.Models;
+using StockportGovUK.NetStandard.Gateways.VerintServiceGateway;
+using StockportGovUK.NetStandard.Models.Enums;
+using StockportGovUK.NetStandard.Models.Verint;
 
 namespace parking_enforcement_service.Services
 {

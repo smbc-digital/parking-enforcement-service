@@ -7,16 +7,9 @@ using StockportGovUK.NetStandard.Models.Enums;
 
 namespace parking_enforcement_service.Helpers
 {
-    public interface IMailHelper
-    {
-        void SendEmail(Person person, EMailTemplate template, string caseReference);
-    }
-
     public class MailHelper : IMailHelper
     {
         private readonly IMailingServiceGateway _mailingServiceGateway;
-
-
         public MailHelper(IMailingServiceGateway mailingServiceGateway)
         {
             _mailingServiceGateway = mailingServiceGateway;
@@ -24,7 +17,7 @@ namespace parking_enforcement_service.Helpers
 
         public void SendEmail(Person person, EMailTemplate template, string caseReference)
         {
-            var submissionDetails = new ComplaintsMailModel()
+            var submissionDetails = new ComplaintsMailModel
             {
                 Subject = "Parking enforcement request form - submission",
                 Reference = caseReference,
