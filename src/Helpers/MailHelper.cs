@@ -10,6 +10,7 @@ namespace parking_enforcement_service.Helpers
     public class MailHelper : IMailHelper
     {
         private readonly IMailingServiceGateway _mailingServiceGateway;
+
         public MailHelper(IMailingServiceGateway mailingServiceGateway)
         {
             _mailingServiceGateway = mailingServiceGateway;
