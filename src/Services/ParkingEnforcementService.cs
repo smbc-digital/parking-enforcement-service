@@ -42,7 +42,16 @@ namespace parking_enforcement_service.Services
                     throw new Exception("Status code not successful");
                 }
 
-                _mailHelper.SendEmail(parkingEnforcementRequest.Reporter, EMailTemplate.ParkingEnforcementRequest, response.ResponseContent);
+                Person person = new Person
+                {
+                    FirstName = parkingEnforcementRequest.FirstName,
+                    LastName = parkingEnforcementRequest.LastName,
+                    Email = parkingEnforcementRequest.Email,
+                    Phone = parkingEnforcementRequest.Phone,
+                    CustomerAddress = parkingEnforcementRequest.CustomersAddress
+                };
+
+                _mailHelper.SendEmail(person, EMailTemplate.ParkingEnforcementRequest, response.ResponseContent);
                 return response.ResponseContent;
             }
             catch (Exception ex)

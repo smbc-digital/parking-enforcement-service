@@ -10,9 +10,8 @@ namespace parking_enforcement_service.Models
     {      
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string JobRole { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public Address Address { get; set; }
+        public Address CustomerAddress { get; set; }
     }
 }
