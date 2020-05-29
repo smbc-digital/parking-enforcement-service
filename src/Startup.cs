@@ -28,7 +28,6 @@ namespace parking_enforcement_service
             services.AddControllers().AddNewtonsoftJson();
             services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
             services.RegisterServices();
-            services.AddAvailability();
             services.AddSwagger();
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("TestHealthCheck");
