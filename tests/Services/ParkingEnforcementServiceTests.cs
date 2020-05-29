@@ -27,7 +27,6 @@ namespace parking_enforcement_service_tests.Services
             Email = "joe@test.com",
             Phone = "0161 123 1234",
             MoreDetails = "test details",
-            FurtherInformation = "test info",
             StreetAddress = new StockportGovUK.NetStandard.Models.Addresses.Address
             {
                 AddressLine1 = "100 Green road",
@@ -117,7 +116,6 @@ namespace parking_enforcement_service_tests.Services
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.AddressLine2, crmCaseParameter.Customer.Address.AddressLine2);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.Town, crmCaseParameter.Customer.Address.AddressLine3);
             Assert.Equal(_parkingEnforcementRequestData.CustomersAddress.Postcode, crmCaseParameter.Customer.Address.Postcode);
-            Assert.Equal(_parkingEnforcementRequestData.FurtherInformation, crmCaseParameter.Description);
             Assert.Null(crmCaseParameter.Customer.Address.UPRN);
             Assert.Null(crmCaseParameter.Customer.Address.Reference);
         }
