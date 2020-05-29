@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using parking_enforcement_service.Utils.HealthChecks;
 using parking_enforcement_service.Utils.ServiceCollectionExtensions;
 using StockportGovUK.AspNetCore.Availability;
+using StockportGovUK.AspNetCore.Availability.Middleware;
 using StockportGovUK.AspNetCore.Middleware;
 using StockportGovUK.NetStandard.Gateways;
 using System.Diagnostics.CodeAnalysis;
@@ -28,6 +29,7 @@ namespace parking_enforcement_service
             services.AddControllers().AddNewtonsoftJson();
             services.AddResilientHttpClients<IGateway, Gateway>(Configuration);
             services.RegisterServices();
+            services.AddAvailability();
             services.AddSwagger();
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("TestHealthCheck");
@@ -49,6 +51,7 @@ namespace parking_enforcement_service
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
+            app.UseMiddleware<Availability>();
             app.UseMiddleware<ApiExceptionHandling>();
             app.UseHealthChecks("/healthcheck", HealthCheckConfig.Options);
            
