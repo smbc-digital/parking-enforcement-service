@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using parking_enforcement_service.Helpers;
 using parking_enforcement_service.Services;
-using StockportGovUK.NetStandard.Gateways;
-using System.Collections.Generic;
 
 namespace parking_enforcement_service.Utils.ServiceCollectionExtensions
 {
@@ -10,6 +10,7 @@ namespace parking_enforcement_service.Utils.ServiceCollectionExtensions
     {
         public static void RegisterServices(this IServiceCollection services)
         {
+            services.AddSingleton<IMailHelper, MailHelper>();
             services.AddTransient<IParkingEnforcementService, ParkingEnforcementService>();
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,9 +7,9 @@ using Microsoft.Extensions.Hosting;
 using parking_enforcement_service.Utils.HealthChecks;
 using parking_enforcement_service.Utils.ServiceCollectionExtensions;
 using StockportGovUK.AspNetCore.Availability;
+using StockportGovUK.AspNetCore.Availability.Middleware;
 using StockportGovUK.AspNetCore.Middleware;
 using StockportGovUK.NetStandard.Gateways;
-using System.Diagnostics.CodeAnalysis;
 
 namespace parking_enforcement_service
 {
@@ -32,7 +33,6 @@ namespace parking_enforcement_service
             services.AddSwagger();
             services.AddHealthChecks()
                 .AddCheck<TestHealthCheck>("TestHealthCheck");
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -44,15 +44,17 @@ namespace parking_enforcement_service
             else
             {
                 app.UseHsts();
-
             }
+
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
+            app.UseMiddleware<Availability>();
             app.UseMiddleware<ApiExceptionHandling>();
+
             app.UseHealthChecks("/healthcheck", HealthCheckConfig.Options);
-           
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
