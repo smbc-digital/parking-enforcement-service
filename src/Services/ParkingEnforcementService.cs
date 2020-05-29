@@ -66,7 +66,7 @@ namespace parking_enforcement_service.Services
             {
                 EventCode = Int32.Parse(configuration.GetSection("CrmCaseSettings").GetSection("EventCode").Value),
                 EventTitle = configuration.GetSection("CrmCaseSettings").GetSection("EventTitle").Value,
-                Description = parkingEnforcementRequest.FurtherInformation,
+                Description = parkingEnforcementRequest.MoreDetails,
                 Classification = configuration.GetSection("CrmCaseSettings").GetSection("Classification").Value,
                 Street = new Street
                 {
